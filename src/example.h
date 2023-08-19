@@ -105,9 +105,9 @@ public:
 	ExampleRef *return_extended_ref() const;
 	Ref<ExampleRef> extended_ref_checks(Ref<ExampleRef> p_ref) const;
 	Variant varargs_func(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
-	int varargs_func_nv(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
+	int64_t varargs_func_nv(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
 	void varargs_func_void(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error);
-	void emit_custom_signal(const String &name, int value);
+	void emit_custom_signal(const String &name, int64_t value);
 	int def_args(int p_a = 100, int p_b = 200);
 
 	Array test_array() const;

@@ -264,15 +264,15 @@ Variant Example::varargs_func(const Variant **args, GDExtensionInt arg_count, GD
 	return arg_count;
 }
 
-int Example::varargs_func_nv(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
-	return 42 + arg_count;
+int64_t Example::varargs_func_nv(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
+	return int64_t(42) + arg_count;
 }
 
 void Example::varargs_func_void(const Variant **args, GDExtensionInt arg_count, GDExtensionCallError &error) {
-	emit_custom_signal("varargs_func_void", arg_count + 1);
+	emit_custom_signal("varargs_func_void", arg_count + (int64_t)1);
 }
 
-void Example::emit_custom_signal(const String &name, int value) {
+void Example::emit_custom_signal(const String &name, int64_t value) {
 	emit_signal("custom_signal", name, value);
 }
 
@@ -369,7 +369,7 @@ Vector2 Example::get_custom_position() const {
 }
 
 Vector4 Example::get_v4() const {
-	return Vector4(1.2, 3.4, 5.6, 7.8);
+	return Vector4(1.2f, 3.4f, 5.6f, 7.8f);
 }
 
 // Virtual function override.

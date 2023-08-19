@@ -27,3 +27,5 @@ demo/bin/*
 # Other stuff
 *.log
 /.vs
+/out
+/bin
