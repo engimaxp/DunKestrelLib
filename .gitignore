@@ -30,3 +30,4 @@ demo/bin/*
 /out
 /bin
 /demo/win_output
+/demo/android_output
