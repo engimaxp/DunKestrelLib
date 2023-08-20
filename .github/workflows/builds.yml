@@ -17,44 +17,38 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - identifier: windows-debug
-            os: windows-latest
-            name: 🏁 Windows Debug
-            target: template_debug
-            platform: windows
-            arch: x86_64
-          - identifier: windows-release
-            os: windows-latest
-            name: 🏁 Windows Release
-            target: template_release
-            platform: windows
-            arch: x86_64
-          - identifier: macos-debug
-            os: macos-latest
-            name: 🍎 macOS (universal) Debug
-            target: template_debug
-            platform: macos
-            arch: universal
-          - identifier: macos-release
-            os: macos-latest
-            name: 🍎 macOS (universal) Release
-            target: template_release
-            platform: macos
-            arch: universal
-          - identifier: linux-debug
-            os: ubuntu-latest
-            name: 🐧 Linux Debug
+          - identifier: android-x86-debug
+            name: "Android (x86_64)"
+            os: "ubuntu-20.04"
             runner: ubuntu-20.04
             target: template_debug
-            platform: linux
-            arch: x86_64
-          - identifier: linux-release
-            os: ubuntu-latest
-            name: 🐧 Linux Release
+            platform: "android"
+            artifact-extension: "so"
+            flags: "ANDROID_NDK_ROOT=$ANDROID_NDK_LATEST_HOME arch=x86_64"
+          - identifier: android-x86-release
+            name: "Android (x86_64)"
+            os: "ubuntu-20.04"
             runner: ubuntu-20.04
             target: template_release
-            platform: linux
-            arch: x86_64
+            platform: "android"
+            artifact-extension: "so"
+            flags: "ANDROID_NDK_ROOT=$ANDROID_NDK_LATEST_HOME arch=x86_64"
+          - identifier: android-arm-debug
+            name: "Android (arm64)"
+            os: "ubuntu-20.04"
+            runner: ubuntu-20.04
+            target: template_debug
+            platform: "android"
+            artifact-extension: "so"
+            flags: "ANDROID_NDK_ROOT=$ANDROID_NDK_LATEST_HOME arch=arm64"
+          - identifier: android-arm-release
+            name: "Android (arm64)"
+            os: "ubuntu-20.04"
+            runner: ubuntu-20.04
+            target: template_release
+            platform: "android"
+            artifact-extension: "so"
+            flags: "ANDROID_NDK_ROOT=$ANDROID_NDK_LATEST_HOME arch=arm64"
 
     steps:
       - name: Checkout project
