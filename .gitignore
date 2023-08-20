@@ -29,3 +29,4 @@ demo/bin/*
 /.vs
 /out
 /bin
+/demo/win_output
