@@ -18,37 +18,41 @@ jobs:
       matrix:
         include:
           - identifier: android-x86-debug
-            name: "Android (x86_64)"
+            name: "Android (x86_64) Debug"
             os: "ubuntu-20.04"
             runner: ubuntu-20.04
             target: template_debug
             platform: "android"
             artifact-extension: "so"
             flags: "ANDROID_NDK_ROOT=$ANDROID_NDK_LATEST_HOME arch=x86_64"
+            arch: x86_64
           - identifier: android-x86-release
-            name: "Android (x86_64)"
+            name: "Android (x86_64) Release"
             os: "ubuntu-20.04"
             runner: ubuntu-20.04
             target: template_release
             platform: "android"
             artifact-extension: "so"
             flags: "ANDROID_NDK_ROOT=$ANDROID_NDK_LATEST_HOME arch=x86_64"
+            arch: x86_64
           - identifier: android-arm-debug
-            name: "Android (arm64)"
+            name: "Android (arm64) Debug"
             os: "ubuntu-20.04"
             runner: ubuntu-20.04
             target: template_debug
             platform: "android"
             artifact-extension: "so"
             flags: "ANDROID_NDK_ROOT=$ANDROID_NDK_LATEST_HOME arch=arm64"
+            arch: arm64
           - identifier: android-arm-release
-            name: "Android (arm64)"
+            name: "Android (arm64) Release"
             os: "ubuntu-20.04"
             runner: ubuntu-20.04
             target: template_release
             platform: "android"
             artifact-extension: "so"
             flags: "ANDROID_NDK_ROOT=$ANDROID_NDK_LATEST_HOME arch=arm64"
+            arch: arm64
 
     steps:
       - name: Checkout project

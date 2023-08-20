@@ -14,3 +14,7 @@ func test():
 	label.text = str(Example.test_static(2,4))
 	print(Example.test_static(2,4))
 	print(x.id)
+
+
+func _on_button_pressed():
+	test()
