@@ -12,7 +12,8 @@
 #include <godot_cpp/classes/multiplayer_api.hpp>
 #include <godot_cpp/classes/multiplayer_peer.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
-
+#include "Graph.h"
+#define randomVertix 0
 using namespace godot;
 
 void ExampleRef::set_id(int p_id) {
@@ -41,8 +42,61 @@ int Example::test_static(int p_a, int p_b) {
 	return p_a + p_b;
 }
 
-void Example::test_static2() {
+Dictionary Example::test_static2(int start) {
 	//UtilityFunctions::print("  void static");
+	int numberOfVertices = 5;
+	unsigned long src = start;//start;
+	//int sum = 0;
+	//int x;
+	vector<vector<int>> matrix2((unsigned long)numberOfVertices);
+	for (int i = 0; i < numberOfVertices; ++i)
+		for (int j = 0; j < numberOfVertices; ++j) {
+			matrix2.at((unsigned long)i).push_back(0);
+		}
+	//Instantiate a Graph object with adjacency matrix
+	matrix2.at(0).at(1) = 4;
+	matrix2.at(0).at(2) = 1;
+	matrix2.at(2).at(1) = 1;
+	matrix2.at(2).at(3) = 5;
+	matrix2.at(1).at(3) = 3;
+	matrix2.at(1).at(4) = 1;
+	matrix2.at(3).at(4) = 2;
+	Graph graph2(numberOfVertices, matrix2);
+	/*
+	cout << "Enter the source vertex's index" << endl;
+	cin >> src;
+	cout << "------------------------Dijkstra Algorithm Results--------------------" << endl;*/
+	vector<vector<int>> shortestEdges = graph2.dijkstraAlgorithm(graph2.getVertices().at(src));
+	UNREFERENCED_PARAMETER(shortestEdges);
+	Dictionary result;
+	for (int i = 0; i < shortestEdges.size();i++) {
+		auto edge = shortestEdges.at(i);
+		int dist = edge.back();
+		edge.pop_back();
+		Dictionary tr;
+		tr["distance"] = dist;
+		TypedArray<Vector2i> edges;
+		int lastl = -1;
+		while (!edge.empty()) {
+			int ll = edge.back();
+			edge.pop_back();
+			if (ll == -1) {
+				break;
+			}
+			else {
+				if (lastl == -1) {
+					edges.append(Vector2i(start,ll));
+				}
+				else {
+					edges.append(Vector2i(lastl, ll));
+				}
+				lastl = ll;
+			}
+		}
+		tr["edges"] = edges;
+		result[i] = tr;
+	}
+	return result;
 }
 
 int Example::def_args(int p_a, int p_b) {

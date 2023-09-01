@@ -18,4 +18,13 @@ offset_right = 365.0
 offset_bottom = 146.0
 text = "test"
 
+[node name="Example" type="Example" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="Example"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

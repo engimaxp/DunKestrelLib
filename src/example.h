@@ -133,7 +133,7 @@ public:
 
 	// Static method.
 	static int test_static(int p_a, int p_b);
-	static void test_static2();
+	static Dictionary test_static2(int start);
 
 	// Virtual function override (no need to bind manually).
 	virtual bool _has_point(const Vector2 &point) const override;
