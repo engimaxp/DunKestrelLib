@@ -12,9 +12,94 @@
 #include <godot_cpp/classes/multiplayer_api.hpp>
 #include <godot_cpp/classes/multiplayer_peer.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
-#include "Graph.h"
+
+
 #define randomVertix 0
 using namespace godot;
+
+DunGraph::DunGraph() {
+	g = Graph();
+}
+
+DunGraph::~DunGraph() {
+	delete(&g);
+}
+
+void DunGraph::init_graph(const TypedArray<int>& vertcie_list, const TypedArray<Vector3i>& edge_list) {
+	delete(&g);
+	g = Graph(vertcie_list, edge_list);
+}
+
+void DunGraph::_bind_methods() {
+	// Methods.
+	ClassDB::bind_method(D_METHOD("init_graph"), &DunGraph::init_graph);
+	ClassDB::bind_method(D_METHOD("dijkstraAlgorithm"), &DunGraph::dijkstraAlgorithm);
+	ClassDB::bind_method(D_METHOD("addNode"), &DunGraph::addNode);
+	ClassDB::bind_method(D_METHOD("addEdge"), &DunGraph::addEdge);
+	ClassDB::bind_method(D_METHOD("removeEdge"), &DunGraph::removeEdge);
+	ClassDB::bind_method(D_METHOD("addEdges"), &DunGraph::addEdges);
+	ClassDB::bind_method(D_METHOD("removeEdges"), &DunGraph::removeEdges);
+	ClassDB::bind_method(D_METHOD("addNodes"), &DunGraph::addNodes);
+	ClassDB::bind_method(D_METHOD("removeNodes"), &DunGraph::removeNodes);
+}
+Dictionary DunGraph::dijkstraAlgorithm(int start) {
+	Dictionary result;
+	auto checkExist = g.getVertices().find(start);
+	if (checkExist == g.getVertices().end()) {
+		return result;
+	}
+	vector<vector<int>> shortestEdges = g.dijkstraAlgorithm(checkExist->second);
+	for (int i = 0; i < shortestEdges.size(); i++) {
+		auto edge = shortestEdges.at(i);
+		int dist = edge.back();
+		edge.pop_back();
+		Dictionary tr;
+		tr["distance"] = dist;
+		TypedArray<Vector2i> edges;
+		int lastl = -1;
+		while (!edge.empty()) {
+			int ll = edge.back();
+			edge.pop_back();
+			if (ll == -1) {
+				break;
+			}
+			else {
+				if (lastl == -1) {
+					edges.append(Vector2i(start, ll));
+				}
+				else {
+					edges.append(Vector2i(lastl, ll));
+				}
+				lastl = ll;
+			}
+		}
+		tr["edges"] = edges;
+		result[i] = tr;
+	}
+	return result;
+}
+void DunGraph::addNode(int index) {
+	g.addNode(index);
+}
+void DunGraph::addEdge(Vector3i p_edge) {
+	g.addEdge(p_edge);
+}
+void DunGraph::removeEdge(Vector2i p_edge) {
+	g.removeEdge(p_edge);
+}
+void DunGraph::addEdges(const TypedArray<Vector3i>& edge_list) {
+	g.addEdges(edge_list);
+}
+void DunGraph::removeEdges(const TypedArray<Vector2i>& edge_list) {
+	g.removeEdges(edge_list);
+}
+void DunGraph::addNodes(const TypedArray<int>& vertcie_list) {
+	g.addNodes(vertcie_list);
+}
+void DunGraph::removeNodes(const TypedArray<int>& node_list) {
+	g.removeNodes(node_list);
+}
+
 
 void ExampleRef::set_id(int p_id) {
 	id = p_id;
@@ -42,32 +127,12 @@ int Example::test_static(int p_a, int p_b) {
 	return p_a + p_b;
 }
 
-Dictionary Example::test_static2(int start) {
+Dictionary Example::test_static2(int start, const TypedArray<int>& vertice_list, const TypedArray<Vector3i>& edge_list) {
 	//UtilityFunctions::print("  void static");
-	int numberOfVertices = 5;
 	unsigned long src = start;//start;
-	//int sum = 0;
-	//int x;
-	vector<vector<int>> matrix2((unsigned long)numberOfVertices);
-	for (int i = 0; i < numberOfVertices; ++i)
-		for (int j = 0; j < numberOfVertices; ++j) {
-			matrix2.at((unsigned long)i).push_back(0);
-		}
-	//Instantiate a Graph object with adjacency matrix
-	matrix2.at(0).at(1) = 4;
-	matrix2.at(0).at(2) = 1;
-	matrix2.at(2).at(1) = 1;
-	matrix2.at(2).at(3) = 5;
-	matrix2.at(1).at(3) = 3;
-	matrix2.at(1).at(4) = 1;
-	matrix2.at(3).at(4) = 2;
-	Graph graph2(numberOfVertices, matrix2);
-	/*
-	cout << "Enter the source vertex's index" << endl;
-	cin >> src;
-	cout << "------------------------Dijkstra Algorithm Results--------------------" << endl;*/
-	vector<vector<int>> shortestEdges = graph2.dijkstraAlgorithm(graph2.getVertices().at(src));
-	UNREFERENCED_PARAMETER(shortestEdges);
+	Graph graph2(vertice_list, edge_list);
+	auto vertices = graph2.getVertices();
+	vector<vector<int>> shortestEdges = graph2.dijkstraAlgorithm(vertices[src]);
 	Dictionary result;
 	for (int i = 0; i < shortestEdges.size();i++) {
 		auto edge = shortestEdges.at(i);

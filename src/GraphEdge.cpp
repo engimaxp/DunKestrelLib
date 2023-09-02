@@ -39,3 +39,7 @@ GraphNode *GraphEdge::getNode1()  {
 GraphNode *GraphEdge::getNode2()  {
     return Node2;
 }
+
+void GraphEdge::setWeight(int nw) {
+    weight = nw;
+}

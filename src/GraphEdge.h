@@ -17,6 +17,7 @@ public:
     ~GraphEdge();
     //Simple Getter methods for variables.
     int getWeight() ;
+    void setWeight(int nw);
     GraphNode *getNode1();
     GraphNode *getNode2();
     //Operator Over-ride in order to check if 2 edges are equal we check all the possible combinations of nodes.
