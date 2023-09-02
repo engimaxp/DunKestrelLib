@@ -195,16 +195,6 @@ void Graph::removeEdge(tuple<int,int> p_edge) {
         }
     }
 }
-void Graph::addEdges(const vector<tuple<int,int,int>>& edge_list) {
-    for (int i = 0; i < edge_list.size(); i++) {
-        addEdge(edge_list[i]);
-    }
-}
-void Graph::removeEdges(const vector<tuple<int,int>>& edge_list) {
-    for (int i = 0; i < edge_list.size(); i++) {
-        removeEdge(edge_list[i]);
-    }
-}
 void Graph::removeNode(int index) {
     auto it1 = vertices.find(index);
     if (it1 != vertices.end()) {
@@ -238,15 +228,5 @@ void Graph::removeNode(int index) {
         }
         vertices.erase(it1);
         delete(tNode);
-    }
-}
-void Graph::addNodes(const vector<int>& vertcie_list) {
-    for (int i = 0; i < vertcie_list.size(); i++) {
-        addNode(vertcie_list[i]);
-    }
-}
-void Graph::removeNodes(const vector<int>& node_list) {
-    for (int i = 0; i < node_list.size(); i++) {
-        removeNode(node_list[i]);
     }
 }

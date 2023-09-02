@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://xq7de1nt1uhl"]
+
+[sub_resource type="SystemFont" id="SystemFont_xygmo"]
+subpixel_positioning = 0
+
+[sub_resource type="LabelSettings" id="LabelSettings_vxdmx"]
+font = SubResource("SystemFont_xygmo")
+font_size = 24
+font_color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label"]
+custom_minimum_size = Vector2(40, 40)
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+text = "1"
+label_settings = SubResource("LabelSettings_vxdmx")
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -26,16 +26,13 @@ public:
     GraphNode* addNode(int index);
     void addEdge(tuple<int, int, int> p_edge);
     void removeEdge(tuple<int,int> p_edge);
-    void addEdges(const vector<tuple<int,int,int>>& edge_list);
-    void removeEdges(const vector<tuple<int,int>>& edge_list);
-    void addNodes(const vector<int>& vertcie_list);
-    void removeNodes(const vector<int>& node_list);
+    void removeNode(int index);
 private:
     GraphEdge addEdge(GraphNode* node1, GraphNode* node2, int weight);
     void createNodes(const vector<int>& vertcie_list);
     void createEdges(const vector<tuple<int,int,int>>& edge_list);
     void printParents(int index,int sourceIndex,int *parentVertices);
-    void removeNode(int index);
+
     // To compare two edges
     class myComparator
     {

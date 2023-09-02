@@ -18,15 +18,15 @@
 using namespace godot;
 
 DunGraph::DunGraph() {
-	g = Graph();
+	g = new Graph();
 }
 
 DunGraph::~DunGraph() {
-	delete(&g);
+	delete(g);
 }
 
 void DunGraph::init_graph(const TypedArray<int>& vertcie_list, const TypedArray<Vector3i>& edge_list) {
-	delete(&g);
+	delete(g);
 	vector<int> x;
 	for (int i = 0; i < vertcie_list.size(); i++) {
 		x.push_back(vertcie_list[i]);
@@ -38,78 +38,88 @@ void DunGraph::init_graph(const TypedArray<int>& vertcie_list, const TypedArray<
 		y.push_back(make_tuple(t.x,t.y,t.z));
 	}
 
-	g = Graph(x, y);
+	g = new Graph(x, y);
 }
 
 void DunGraph::_bind_methods() {
 	// Methods.
 	ClassDB::bind_method(D_METHOD("init_graph"), &DunGraph::init_graph);
-	/*ClassDB::bind_method(D_METHOD("dijkstraAlgorithm"), &DunGraph::dijkstraAlgorithm);
+	ClassDB::bind_method(D_METHOD("dijkstraAlgorithm"), &DunGraph::dijkstraAlgorithm);
 	ClassDB::bind_method(D_METHOD("addNode"), &DunGraph::addNode);
 	ClassDB::bind_method(D_METHOD("addEdge"), &DunGraph::addEdge);
 	ClassDB::bind_method(D_METHOD("removeEdge"), &DunGraph::removeEdge);
 	ClassDB::bind_method(D_METHOD("addEdges"), &DunGraph::addEdges);
 	ClassDB::bind_method(D_METHOD("removeEdges"), &DunGraph::removeEdges);
 	ClassDB::bind_method(D_METHOD("addNodes"), &DunGraph::addNodes);
-	ClassDB::bind_method(D_METHOD("removeNodes"), &DunGraph::removeNodes);*/
+	ClassDB::bind_method(D_METHOD("removeNodes"), &DunGraph::removeNodes);
 }
-//Dictionary DunGraph::dijkstraAlgorithm(int start) {
-//	Dictionary result;
-//	auto checkExist = g.getVertices().find(start);
-//	if (checkExist == g.getVertices().end()) {
-//		return result;
-//	}
-//	vector<vector<int>> shortestEdges = g.dijkstraAlgorithm(checkExist->second);
-//	for (int i = 0; i < shortestEdges.size(); i++) {
-//		auto edge = shortestEdges.at(i);
-//		int dist = edge.back();
-//		edge.pop_back();
-//		Dictionary tr;
-//		tr["distance"] = dist;
-//		TypedArray<Vector2i> edges;
-//		int lastl = -1;
-//		while (!edge.empty()) {
-//			int ll = edge.back();
-//			edge.pop_back();
-//			if (ll == -1) {
-//				break;
-//			}
-//			else {
-//				if (lastl == -1) {
-//					edges.append(Vector2i(start, ll));
-//				}
-//				else {
-//					edges.append(Vector2i(lastl, ll));
-//				}
-//				lastl = ll;
-//			}
-//		}
-//		tr["edges"] = edges;
-//		result[i] = tr;
-//	}
-//	return result;
-//}
-//void DunGraph::addNode(int index) {
-//	g.addNode(index);
-//}
-//void DunGraph::addEdge(Vector3i p_edge) {
-//	g.addEdge(p_edge);
-//}
-//void DunGraph::removeEdge(Vector2i p_edge) {
-//	g.removeEdge(p_edge);
-//}
-//void DunGraph::addEdges(const TypedArray<Vector3i>& edge_list) {
-//	g.addEdges(edge_list);
-//}
-//void DunGraph::removeEdges(const TypedArray<Vector2i>& edge_list) {
-//	g.removeEdges(edge_list);
-//}
-//void DunGraph::addNodes(const TypedArray<int>& vertcie_list) {
-//	g.addNodes(vertcie_list);
-//}
-//void DunGraph::removeNodes(const TypedArray<int>& node_list) {
-//	g.removeNodes(node_list);
-//}
+Dictionary DunGraph::dijkstraAlgorithm(int start) {
+	Dictionary result;
+	auto checkExist = g->getVertices().find(start);
+	if (checkExist == g->getVertices().end()) {
+		return result;
+	}
+	vector<vector<int>> shortestEdges = g->dijkstraAlgorithm(checkExist->second);
+	for (int i = 0; i < shortestEdges.size(); i++) {
+		auto edge = shortestEdges.at(i);
+		int dist = edge.back();
+		edge.pop_back();
+		Dictionary tr;
+		tr["distance"] = dist;
+		TypedArray<Vector2i> edges;
+		int lastl = -1;
+		while (!edge.empty()) {
+			int ll = edge.back();
+			edge.pop_back();
+			if (ll == -1) {
+				break;
+			}
+			else {
+				if (lastl == -1) {
+					edges.append(Vector2i(start, ll));
+				}
+				else {
+					edges.append(Vector2i(lastl, ll));
+				}
+				lastl = ll;
+			}
+		}
+		tr["edges"] = edges;
+		result[i] = tr;
+	}
+	return result;
+}
+void DunGraph::addNode(int index) {
+	g->addNode(index);
+}
+void DunGraph::addEdge(Vector3i p_edge) {
+	g->addEdge(make_tuple(p_edge.x, p_edge.y, p_edge.z));
+}
+void DunGraph::removeEdge(Vector2i p_edge) {
+	g->removeEdge(make_tuple(p_edge.x, p_edge.y));
+}
+void DunGraph::addEdges(const TypedArray<Vector3i>& edge_list) {
+	for (int i = 0; i < edge_list.size(); i++) {
+		Vector3i e = edge_list[i];
+		g->addEdge(make_tuple(e.x,e.y,e.z));
+	}
+}
+void DunGraph::removeEdges(const TypedArray<Vector2i>& edge_list) {
+	for (int i = 0; i < edge_list.size(); i++) {
+		Vector2i e = edge_list[i];
+		g->removeEdge(make_tuple(e.x, e.y));
+	}
+}
+void DunGraph::addNodes(const TypedArray<int>& vertcie_list) {
+	for (int i = 0; i < vertcie_list.size(); i++) {
+		g->addNode(vertcie_list[i]);
+	}
+}
+void DunGraph::removeNodes(const TypedArray<int>& node_list) {
+	for (int i = 0; i < node_list.size(); i++) {
+		g->removeNode(node_list[i]);
+	}
+}
 
 
 void ExampleRef2::set_id(int p_id) {
