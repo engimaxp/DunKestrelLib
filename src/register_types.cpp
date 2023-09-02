@@ -15,11 +15,13 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 	}
 
 	ClassDB::register_class<ExampleRef>();
+	ClassDB::register_class<ExampleRef2>();
+	ClassDB::register_class<DunGraph>();
 	ClassDB::register_class<ExampleMin>();
 	ClassDB::register_class<Example>();
 	ClassDB::register_class<ExampleVirtual>(true);
 	ClassDB::register_abstract_class<ExampleAbstract>();
-	ClassDB::register_class<DunGraph>();
+	//ClassDB::register_class<DunGraph>();
 	
 }
 

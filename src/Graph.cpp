@@ -9,7 +9,7 @@ Graph::Graph() {
     
 }
 
-Graph::Graph(const TypedArray<int>& vertcie_list, const TypedArray<Vector3i>& edge_list){
+Graph::Graph(const vector<int>& vertcie_list, const vector<tuple<int,int,int>>& edge_list){
     createNodes(vertcie_list);
     createEdges(edge_list);
 }
@@ -133,16 +133,16 @@ void Graph::printParents(int index, int sourceIndex, int *parentVertices) {
 
 }
 //Insert nodes using the number of vertices input.
-void Graph::createNodes(const TypedArray<int>& vertcie_list) {
+void Graph::createNodes(const vector<int>& vertcie_list) {
     for (int i = 0; i < vertcie_list.size(); i++) {
         addNode(vertcie_list[i]);
     }
 }
 //Insert edges using the adjacency matrix input.
-void Graph::createEdges(const TypedArray<Vector3i>& edge_list) {
+void Graph::createEdges(const vector<tuple<int,int,int>>& edge_list) {
     for (int i = 0; i < edge_list.size(); i++) {
-        Vector3i ce = edge_list[i];
-        addEdge(vertices[ce.x], vertices[ce.y], ce.z);
+        tuple<int,int,int> ce = edge_list[i];
+        addEdge(vertices[get<0>(ce)], vertices[get<1>(ce)], get<2>(ce));
     }
 }
 //Method to return the vertices from the graph.
@@ -162,27 +162,27 @@ int Graph::myComparator::operator()(GraphEdge &edge1, GraphEdge &edge2) {
     return edge1.getWeight() > edge2.getWeight();
 }
 
-void Graph::addEdge(Vector3i p_edge) {
+void Graph::addEdge(tuple<int,int,int> p_edge) {
     auto it_e = find_if(edges.begin(), edges.end(), [p_edge](GraphEdge* x)->bool {
-        return x->getNode1()->getNodeIndex() == p_edge.x && x->getNode2()->getNodeIndex() == p_edge.y;
+        return x->getNode1()->getNodeIndex() == get<0>(p_edge) && x->getNode2()->getNodeIndex() == get<1>(p_edge);
         });
     if (it_e != edges.end()) {
-        (*it_e)->setWeight(p_edge.z);
+        (*it_e)->setWeight(get<2>(p_edge));
     }
-    auto it1 = vertices.find(p_edge.x);
-    auto it2 = vertices.find(p_edge.y);
+    auto it1 = vertices.find(get<0>(p_edge));
+    auto it2 = vertices.find(get<1>(p_edge));
     if (it1 != vertices.end() && it2 != vertices.end()) {
-        addEdge(it1->second, it2->second, p_edge.z);
+        addEdge(it1->second, it2->second, get<2>(p_edge));
     }
 }
 
-void Graph::removeEdge(Vector2i p_edge) {
-    auto it1 = vertices.find(p_edge.x);
-    auto it2 = vertices.find(p_edge.y);
+void Graph::removeEdge(tuple<int,int> p_edge) {
+    auto it1 = vertices.find(get<0>(p_edge));
+    auto it2 = vertices.find(get<1>(p_edge));
     if (it1 != vertices.end() && it2 != vertices.end()) {
         vector<GraphEdge*> tve = it1->second->getEdges();
         auto it_e = find_if(tve.begin(), tve.end(), [p_edge](GraphEdge* x)->bool {
-            return x->getNode1()->getNodeIndex() == p_edge.x && x->getNode2()->getNodeIndex() == p_edge.y;
+            return x->getNode1()->getNodeIndex() == get<0>(p_edge) && x->getNode2()->getNodeIndex() == get<1>(p_edge);
             });
         if (it_e != tve.end()) {
             GraphEdge* edge_to_delete = *it_e;
@@ -195,12 +195,12 @@ void Graph::removeEdge(Vector2i p_edge) {
         }
     }
 }
-void Graph::addEdges(const TypedArray<Vector3i>& edge_list) {
+void Graph::addEdges(const vector<tuple<int,int,int>>& edge_list) {
     for (int i = 0; i < edge_list.size(); i++) {
         addEdge(edge_list[i]);
     }
 }
-void Graph::removeEdges(const TypedArray<Vector2i>& edge_list) {
+void Graph::removeEdges(const vector<tuple<int,int>>& edge_list) {
     for (int i = 0; i < edge_list.size(); i++) {
         removeEdge(edge_list[i]);
     }
@@ -240,12 +240,12 @@ void Graph::removeNode(int index) {
         delete(tNode);
     }
 }
-void Graph::addNodes(const TypedArray<int>& vertcie_list) {
+void Graph::addNodes(const vector<int>& vertcie_list) {
     for (int i = 0; i < vertcie_list.size(); i++) {
         addNode(vertcie_list[i]);
     }
 }
-void Graph::removeNodes(const TypedArray<int>& node_list) {
+void Graph::removeNodes(const vector<int>& node_list) {
     for (int i = 0; i < node_list.size(); i++) {
         removeNode(node_list[i]);
     }

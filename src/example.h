@@ -26,6 +26,26 @@
 using namespace godot;
 
 
+class ExampleRef2 : public RefCounted {
+	GDCLASS(ExampleRef2, RefCounted);
+
+private:
+	static int instance_count;
+	static int last_id;
+
+	int id;
+
+protected:
+	static void _bind_methods();
+
+public:
+	ExampleRef2();
+	~ExampleRef2();
+
+	void set_id(int p_id);
+	int get_id() const;
+};
+
 class DunGraph : public RefCounted {
 	GDCLASS(DunGraph, RefCounted);
 private:
@@ -38,14 +58,14 @@ public:
 	DunGraph();
 	~DunGraph();
 	void init_graph(const TypedArray<int>& vertcie_list, const TypedArray<Vector3i>& edge_list);
-	Dictionary dijkstraAlgorithm(int start);
+	/*Dictionary dijkstraAlgorithm(int start);
 	void addNode(int index);
 	void addEdge(Vector3i p_edge);
 	void removeEdge(Vector2i p_edge);
 	void addEdges(const TypedArray<Vector3i>& edge_list);
 	void removeEdges(const TypedArray<Vector2i>& edge_list);
 	void addNodes(const TypedArray<int>& vertcie_list);
-	void removeNodes(const TypedArray<int>& node_list);
+	void removeNodes(const TypedArray<int>& node_list);*/
 };
 
 class ExampleRef : public RefCounted {
