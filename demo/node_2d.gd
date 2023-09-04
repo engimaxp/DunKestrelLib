@@ -7,6 +7,7 @@ extends Node2D
 @onready var example:Example = $Example as Example
 @onready var timer = $Timer
 @onready var line_edit = $LineEdit
+@onready var line_edit_2 = $LineEdit2
 
 var can_press = true
 
@@ -15,18 +16,10 @@ const LINE = preload("res://line_2d.tscn")
 const CLABEL = preload("res://label.tscn")
 var graph = DunGraph.new()
 
-var vid = 0;
+var vid = 1;
 
 func _ready():
-	graph.init_graph([1,2,3,4,5],[
-		Vector3i(1,2,5),
-		Vector3i(1,3,2),
-		Vector3i(3,2,2),
-		Vector3i(3,4,5),
-		Vector3i(2,4,4),
-		Vector3i(2,5,2),
-		Vector3i(4,5,3),
-	])
+	pass
 
 var start_d
 var end_d
@@ -52,11 +45,13 @@ func dot_press(button_index,d):
 			cl.position = (start_d.position + end_d.position) / 2.0
 			add_child(cl)
 			add_child(l)
+			graph.addEdge(Vector3i(start_d.id,end_d.id,weight))
 			lines[Vector2i(start_d.id,end_d.id)] = [l,cl]
 			start_d = null
 			end_d = null
 			
 	if button_index == MOUSE_BUTTON_MIDDLE:
+		graph.removeNode(d.id)
 		for l in lines.keys():
 			if l.x == d.id or l.y == d.id:
 				lines[l][0].queue_free()
@@ -79,18 +74,19 @@ func _unhandled_input(_event):
 			vid += 1
 			d.position = _event.position
 			add_child(d)
+			graph.addNode(d.id)
 			d.pressed.connect(dot_press.bind(d))
 			d.enter.connect(set_addable_dot.bind(false))
 			d.exit.connect(set_addable_dot.bind(true))
 	if Input.is_action_just_pressed("ui_accept"):
-		test()
+		test(int(line_edit_2.text))
 
-func new_test():
-	print(graph.dijkstraAlgorithm(2))
+func new_test(id):
+	print(graph.dijkstraAlgorithm(id))
 
-func test():
+func test(id):
 	var start_time = Time.get_ticks_usec()
-	new_test()
+	new_test(id)
 	var end_time = Time.get_ticks_usec()
 	print("%f us" % (end_time - start_time))
 #	var x = ExampleRef.new()
@@ -111,7 +107,7 @@ func test():
 
 
 func _on_button_pressed():
-	test()
+	test(int(line_edit_2.text))
 
 
 func _on_timer_timeout():
@@ -128,3 +124,7 @@ func _on_plus_pressed():
 	var ov = int(line_edit.text)
 	ov += 1
 	line_edit.text = str(ov)
+
+
+func _on_button_2_pressed():
+	get_tree().change_scene_to_file("res://node_2d_2.tscn")

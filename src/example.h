@@ -66,6 +66,7 @@ public:
 	void removeEdges(const TypedArray<Vector2i>& edge_list);
 	void addNodes(const TypedArray<int>& vertcie_list);
 	void removeNodes(const TypedArray<int>& node_list);
+	void removeNode(int index);
 };
 
 class ExampleRef : public RefCounted {

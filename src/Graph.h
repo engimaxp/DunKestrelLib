@@ -22,7 +22,7 @@ public:
     Graph(const vector<int>& vertcie_list, const vector<tuple<int,int,int>>& edge_list);
     const unordered_map<int,GraphNode *> &getVertices() const;
     //vector<GraphEdge>* primAlgorithm(GraphNode* node);
-    vector<vector<int>> dijkstraAlgorithm(GraphNode* node);
+    vector<tuple<int, vector<int>>> dijkstraAlgorithm(GraphNode* node);
     GraphNode* addNode(int index);
     void addEdge(tuple<int, int, int> p_edge);
     void removeEdge(tuple<int,int> p_edge);

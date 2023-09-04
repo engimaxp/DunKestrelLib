@@ -51,6 +51,7 @@ void DunGraph::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("addEdges"), &DunGraph::addEdges);
 	ClassDB::bind_method(D_METHOD("removeEdges"), &DunGraph::removeEdges);
 	ClassDB::bind_method(D_METHOD("addNodes"), &DunGraph::addNodes);
+	ClassDB::bind_method(D_METHOD("removeNode"), &DunGraph::removeNode);	
 	ClassDB::bind_method(D_METHOD("removeNodes"), &DunGraph::removeNodes);
 }
 Dictionary DunGraph::dijkstraAlgorithm(int start) {
@@ -59,10 +60,11 @@ Dictionary DunGraph::dijkstraAlgorithm(int start) {
 	if (checkExist == g->getVertices().end()) {
 		return result;
 	}
-	vector<vector<int>> shortestEdges = g->dijkstraAlgorithm(checkExist->second);
+	vector<tuple<int,vector<int>>> shortestEdges = g->dijkstraAlgorithm(checkExist->second);
 	for (int i = 0; i < shortestEdges.size(); i++) {
-		auto edge = shortestEdges.at(i);
-		int dist = edge.back();
+		 auto element = shortestEdges.at(i);
+		 auto edge = std::get<1>(element);
+		 int dist = edge.back();
 		edge.pop_back();
 		Dictionary tr;
 		tr["distance"] = dist;
@@ -85,7 +87,7 @@ Dictionary DunGraph::dijkstraAlgorithm(int start) {
 			}
 		}
 		tr["edges"] = edges;
-		result[i] = tr;
+		result[std::get<0>(element)] = tr;
 	}
 	return result;
 }
@@ -119,6 +121,10 @@ void DunGraph::removeNodes(const TypedArray<int>& node_list) {
 	for (int i = 0; i < node_list.size(); i++) {
 		g->removeNode(node_list[i]);
 	}
+}
+
+void DunGraph::removeNode(int index) {
+	g->removeNode(index);
 }
 
 

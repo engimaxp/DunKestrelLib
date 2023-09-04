@@ -61,7 +61,7 @@ GraphEdge Graph::addEdge(GraphNode *node1, GraphNode *node2, int weight) {
 //    return MST;
 //}
 //Dijkstra Algorithm Method to find the shortest path.
-vector<vector<int>> Graph::dijkstraAlgorithm(GraphNode *node) {
+vector<tuple<int, vector<int>>> Graph::dijkstraAlgorithm(GraphNode *node) {
     size_t numberOfVertices = vertices.size();
     unordered_map<int, int> vIndexMap(numberOfVertices);
     unordered_map<int, int> vIndexReverseMap(numberOfVertices);
@@ -98,7 +98,7 @@ vector<vector<int>> Graph::dijkstraAlgorithm(GraphNode *node) {
 
         }
     }
-    vector<vector<int>> to_e;
+    vector<tuple<int,vector<int>>> to_e;
     for (int j = 0; j < numberOfVertices; ++j) {
         vector<int> from_e;
         if (j != vIndexMap[node->getNodeIndex()]) {
@@ -112,11 +112,11 @@ vector<vector<int>> Graph::dijkstraAlgorithm(GraphNode *node) {
                 k = parentVertices[k];
             }
             from_e.push_back(distanceFromSource[j]);
-            to_e.push_back(from_e);
+            to_e.push_back(make_pair(vIndexReverseMap[j],from_e));
         }
         else {
             from_e.push_back(distanceFromSource[j]);
-            to_e.push_back(from_e);
+            to_e.push_back(make_pair(vIndexReverseMap[j],from_e));
         }
     }
     delete[](distanceFromSource);
@@ -202,10 +202,10 @@ void Graph::removeNode(int index) {
         // 1.1 find all edges directed to node target
         // 1.2 find all nodes in 1.1 start node and delete edge themself from that node
         // 1.3 delete all edges from graph edges in 1.1
-        for (auto&& it = edges.begin(); it != edges.end(); it++) {
+        for (auto&& it = edges.begin(); it != edges.end();) {
             if ((*it)->getNode2()->getNodeIndex() == index) {
                 GraphEdge* r = *it;
-                edges.erase(it);
+                it = edges.erase(it);
                 auto tve = &(r->getNode1()->getEdges());
                 auto find_e = find_if(tve->begin(), tve->end(), [r](GraphEdge* e)->bool {
                     return e == r;
@@ -214,16 +214,19 @@ void Graph::removeNode(int index) {
                 delete(r);
             }
             // 2.3 delete all edges from graph edges in 2.1
-            if ((*it)->getNode1()->getNodeIndex() == index) {
-                edges.erase(it);
+            else if ((*it)->getNode1()->getNodeIndex() == index) {
+                it = edges.erase(it);
+            }
+            else {
+                it++;
             }
         }
         // 2.1 find all edges from node target(direct from node edges)
         // 2.2 delete all edges from node edges in 2.1
         auto tve = &(it1->second->getEdges());
-        for (auto&& it = tve->begin(); it != tve->end(); it++) {
+        for (auto&& it = tve->begin(); it != tve->end();) {
             GraphEdge* r = *it;
-            tve->erase(it);
+            it = tve->erase(it);
             delete(r);
         }
         vertices.erase(it1);
