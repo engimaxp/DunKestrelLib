@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://cm2yu5clca3tk"]
+[gd_scene load_steps=3 format=3 uid="uid://cm2yu5clca3tk"]
+
+[ext_resource type="Script" path="res://line_2d.gd" id="1_saehq"]
 
 [sub_resource type="Curve" id="Curve_qh6kl"]
 _data = [Vector2(0, 0.210526), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
@@ -6,3 +8,4 @@ point_count = 2
 
 [node name="Line2D" type="Line2D"]
 width_curve = SubResource("Curve_qh6kl")
+script = ExtResource("1_saehq")

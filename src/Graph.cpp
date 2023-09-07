@@ -180,18 +180,27 @@ void Graph::removeEdge(tuple<int,int> p_edge) {
     auto it1 = vertices.find(get<0>(p_edge));
     auto it2 = vertices.find(get<1>(p_edge));
     if (it1 != vertices.end() && it2 != vertices.end()) {
-        vector<GraphEdge*> tve = it1->second->getEdges();
-        auto it_e = find_if(tve.begin(), tve.end(), [p_edge](GraphEdge* x)->bool {
+        vector<GraphEdge*>* tve = &it1->second->getEdges();
+        /*auto it_e = find_if(tve.begin(), tve.end(), [p_edge](GraphEdge* x)->bool {
             return x->getNode1()->getNodeIndex() == get<0>(p_edge) && x->getNode2()->getNodeIndex() == get<1>(p_edge);
-            });
-        if (it_e != tve.end()) {
-            GraphEdge* edge_to_delete = *it_e;
-            it1->second->getEdges().erase(it_e);
-            auto it_e2 = find_if(edges.begin(), edges.end(), [edge_to_delete](GraphEdge* x)->bool {
-                return x == edge_to_delete;
-                });
-            edges.erase(it_e2);
-            delete(edge_to_delete);
+            });*/
+        for (auto&& it_e = tve->begin(); it_e != tve->end();) {
+            if ((*it_e)->getNode1()->getNodeIndex() == get<0>(p_edge) && (*it_e)->getNode2()->getNodeIndex() == get<1>(p_edge)) {
+                for (auto&& it_e2 = edges.begin(); it_e2 != edges.end();) {
+                    if ((*it_e) == *it_e2) {
+                        it_e2 = edges.erase(it_e2);
+                    }
+                    else {
+                        it_e2++;
+                    }
+                }
+                GraphEdge* r = *it_e;
+                it_e = tve->erase(it_e);
+                delete(r);
+            }
+            else {
+                it_e++;
+            }
         }
     }
 }

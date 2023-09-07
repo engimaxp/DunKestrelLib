@@ -18,13 +18,10 @@ var graph = DunGraph.new()
 
 var vid = 1;
 
-func _ready():
-	pass
-
 var start_d
 var end_d
 var lines = {}
-
+var selected_l
 func dot_press(button_index,d):
 	print(button_index,d)
 	if can_press:
@@ -35,20 +32,26 @@ func dot_press(button_index,d):
 	if button_index == MOUSE_BUTTON_RIGHT:
 		if start_d != null and end_d != start_d:
 			end_d = d
-			var l = LINE.instantiate()
-			l.add_point(start_d.position)
-			l.add_point(end_d.position)
-			
-			var weight = int(line_edit.text) if line_edit.text.is_valid_int() else 1
-			var cl = CLABEL.instantiate()
-			cl.text = str(weight)
-			cl.position = (start_d.position + end_d.position) / 2.0
-			add_child(cl)
-			add_child(l)
-			graph.addEdge(Vector3i(start_d.id,end_d.id,weight))
-			lines[Vector2i(start_d.id,end_d.id)] = [l,cl]
-			start_d = null
-			end_d = null
+			if lines.has(Vector2i(start_d.id,end_d.id)):
+				var l = lines[Vector2i(start_d.id,end_d.id)]
+				selected_l = l[0]
+				selected_l.line_color = Color.DARK_TURQUOISE
+			else:
+				selected_l = null
+				var l = LINE.instantiate()
+				l.add_point(start_d.position)
+				l.add_point(end_d.position)
+				l.start_end = Vector2i(start_d.id,end_d.id)
+				var weight = int(line_edit.text) if line_edit.text.is_valid_int() else 1
+				var cl = CLABEL.instantiate()
+				cl.text = str(weight)
+				cl.position = (start_d.position + end_d.position) / 2.0
+				add_child(cl)
+				add_child(l)
+				graph.addEdge(Vector3i(start_d.id,end_d.id,weight))
+				lines[Vector2i(start_d.id,end_d.id)] = [l,cl]
+				start_d = null
+				end_d = null
 			
 	if button_index == MOUSE_BUTTON_MIDDLE:
 		graph.removeNode(d.id)
@@ -82,7 +85,24 @@ func _unhandled_input(_event):
 		test(int(line_edit_2.text))
 
 func new_test(id):
-	print(graph.dijkstraAlgorithm(id))
+	var dic = graph.dijkstraAlgorithm(id)
+	var kdic = {}
+	for k in dic.keys():
+		if dic[k]["distance"] <= 0 or dic[k]["distance"] >= 9999:
+			continue
+		for v in dic[k]["edges"]:
+			kdic[v] = true
+	for l in lines.values():
+		l[0].line_color = Color.WHITE
+	for k in kdic.keys():
+		lines[k][0].line_color = Color.YELLOW_GREEN
+
+func remove_Edge(start,end):
+	var v = Vector2i(start,end)
+	for x in lines[v]:
+		x.queue_free()
+	lines.erase(v)
+	graph.removeEdge(Vector2i(start,end))
 
 func test(id):
 	var start_time = Time.get_ticks_usec()
@@ -128,3 +148,11 @@ func _on_plus_pressed():
 
 func _on_button_2_pressed():
 	get_tree().change_scene_to_file("res://node_2d_2.tscn")
+
+
+func _on_button_3_pressed():
+	if is_instance_valid(selected_l):
+		var se = selected_l.start_end
+		var weight = int(line_edit.text) if line_edit.text.is_valid_int() else 1
+		lines[se][1].text  = str(weight)
+		graph.addEdge(Vector3i(se.x,se.y,weight))
