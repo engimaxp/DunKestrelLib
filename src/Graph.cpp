@@ -169,10 +169,12 @@ void Graph::addEdge(tuple<int,int,int> p_edge) {
     if (it_e != edges.end()) {
         (*it_e)->setWeight(get<2>(p_edge));
     }
-    auto it1 = vertices.find(get<0>(p_edge));
-    auto it2 = vertices.find(get<1>(p_edge));
-    if (it1 != vertices.end() && it2 != vertices.end()) {
-        addEdge(it1->second, it2->second, get<2>(p_edge));
+    else {
+        auto it1 = vertices.find(get<0>(p_edge));
+        auto it2 = vertices.find(get<1>(p_edge));
+        if (it1 != vertices.end() && it2 != vertices.end()) {
+            addEdge(it1->second, it2->second, get<2>(p_edge));
+        }
     }
 }
 
